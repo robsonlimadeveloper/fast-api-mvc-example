@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy
+psycopg2-binary
+passlib==1.7.4
+pwdlib==0.2.1
+PyJWT==2.9.0
+pydantic-settings
+python-multipart
