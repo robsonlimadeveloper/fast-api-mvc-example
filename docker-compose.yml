@@ -1,6 +1,7 @@
-version: '3.8'
+
 services:
   db:
+    container_name: api-db
     image: postgres:13
     environment:
       POSTGRES_USER: postgres
@@ -12,6 +13,9 @@ services:
   web:
     build: .
     container_name: api
+    # hostname: localhost
+    volumes:
+      - ".:/root/app"
     depends_on:
       - db
     ports:
@@ -21,3 +25,4 @@ services:
     environment:
       DATABASE_URL: postgresql://postgres:password@db/mydatabase
     restart: always
+

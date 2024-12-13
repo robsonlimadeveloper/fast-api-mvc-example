@@ -9,5 +9,12 @@ class UserResponseDTO(BaseModel):
     id: int
     username: str
 
-    class Config:
+    class ConfigDict:
+        from_attributes = True
+
+class UserUpdateDTO(BaseModel):
+    username: Optional[str]
+    password: Optional[str]
+
+    class ConfigDict:
         from_attributes = True
