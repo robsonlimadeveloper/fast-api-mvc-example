@@ -38,7 +38,7 @@ def register_models():
         try:
             importlib.import_module(import_path)
         except Exception as e:
-            print(f"Erro ao importar o módulo {import_path}: {e}")
+            print(f"Failed to import {import_path}: {e}")
 
 def create_tables():
     """This method create tables"""
@@ -55,16 +55,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     lifespan=lifespan,
-    title="FastAPI - Arquitetura MVC",
+    title="FastAPI - MVC Architecture",
     contact={"name": "Robson Soares", "email": "robsonlimadeveloper@gmail.com"},
-    # summary="FastAPI com SQLAlchemy",
+    # summary="FastAPI",
     license_info={"name": "MIT License"},
     terms_of_service="https://www.example.com/terms",
-    description="Exemplo de API usando FastAPI e arquitetura MVC(Model-View-Controller) e elementos de microserviços.",
+    description="Example FastAPI application using MVC architecture and microservices elements.",
     version="1.0.0",
     openapi_url="/openapi.json",
-    docs_url="/docs",
-    redoc_url="/redoc",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
     debug=True
     )
 
@@ -78,10 +78,10 @@ app.add_middleware(
 app.openapi_schema = None
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/token')
 
-# Registre as rotas ao iniciar a aplicação
+# Register routes
 from app.core import routes
 
-# Tratamento global de exceções
+# Register exception handlers
 @app.exception_handler(AuthenticationException)
 def authentication_exception_handler(request, exc: AuthenticationException):
     return JSONResponse(

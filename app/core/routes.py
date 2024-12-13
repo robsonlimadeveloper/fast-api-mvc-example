@@ -1,10 +1,9 @@
-from ast import mod
+"""Routes base."""
 import importlib
-import traceback
 import sys
 import os
-from fastapi import APIRouter, FastAPI
-from app.modules import get_named_modules  # Supondo que essa função retorna os módulos necessários
+from fastapi import APIRouter
+from app.modules import get_named_modules
 from app.main import app
 
 def include_router_from_module(target, module):
@@ -15,7 +14,7 @@ def include_router_from_module(target, module):
             target.include_router(attribute)
 
 def register_routes():
-    """Registra rotas a partir dos arquivos `views.py` em cada módulo."""
+    """Register routes from modules."""
     module_path = "app/modules/"
     module_dir = os.path.join(sys.path[0], module_path)
     modules = os.listdir(module_dir)
@@ -27,12 +26,12 @@ def register_routes():
                 imported_module = importlib.import_module(import_path)
                 include_router_from_module(app, imported_module)
             except Exception as e:
-                print(f"Erro ao carregar o módulo {module}: {e}")
+                print(f"Failed to import {module}: {e}")
 
-# Registra as rotas ao iniciar a aplicação
+# Register routes
 register_routes()
 
-# Endpoint base da API
+# Routes base
 @app.get("/api", tags=["API Index"])
 def api_index():
     """API index base."""
