@@ -1,7 +1,6 @@
-from unittest.mock import patch
+import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
-from app.main import app 
+from app.main import app
 from app.modules.user.service import UserService
 from app.modules.user.model import User
 from app.modules.user.repository import UserRepository
@@ -15,26 +14,32 @@ def prepare_data_user() -> dict:
         "password": "1234"
     }
 
-
-@patch("app.modules.user.repository.session")
-@patch("app.modules.user.repository.UserRepository.find_by_username")
-@patch("app.modules.user.repository.UserRepository.save")
-def test_user_register_verify_if_not_exists(mock_save, mock_find, session):
+@pytest.fixture
+def mock_user_repository(mocker):
     """
-    Testa o registro de usuário verificando se o username não existe.
+    Mock user repository
     """
-    # Simula os retornos dos métodos do repositório
-    mock_find.return_value = None  # Simula que o usuário não existe no banco
-    mock_save.return_value = User(username="admin")  # Simula a criação do usuário
+    mock_find = mocker.patch("app.modules.user.repository.UserRepository.find_by_username")
+    mock_save = mocker.patch("app.modules.user.repository.UserRepository.save")
+    mock_session = mocker.patch("app.modules.user.repository.session")
+    
+    return mock_find, mock_save, mock_session
 
-    # Instancia o serviço com o repositório mockado
+def test_register_user(mock_user_repository):
+    """Test register user"""
+    mock_find, mock_save, _ = mock_user_repository
+    
+    # Simule repository returns
+    mock_find.return_value = None  # Simule user not exists
+    mock_save.return_value = User(username="admin")  # Simule user saved
+
+    # Instance service
     user_service = UserService(repository=UserRepository())
 
-    # Chama o método de registro
-    user_data = prepare_data_user()
+    user_data = prepare_data_user()  # Prepare user data
     registered_user = user_service.register(user_data)
 
-    # Asserções
+    # Assertions
     assert registered_user.username == "admin"
     assert isinstance(registered_user, User)
 

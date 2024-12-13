@@ -1,6 +1,5 @@
-from typing import List, Type, TypeVar, Generic, Optional
+from typing import List, TypeVar, Generic, Optional
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
 from app.core.repository_abstract import RepositoryAbstract
 from app.commom.exceptions.information_not_found import InformationNotFound
 
@@ -21,7 +20,7 @@ class ServiceAbstract(Generic[ModelType, DTOType]):
         """Get model by id"""
         instance = self.repository.find_by_id(id)
         if not instance:
-            raise InformationNotFound(f"Registro com ID {id} não encontrado.")
+            raise InformationNotFound(f"Register {id} not found.")
         return instance
 
     def register(self, dto: DTOType) -> ModelType:
@@ -46,13 +45,11 @@ class ServiceAbstract(Generic[ModelType, DTOType]):
         return instance
 
     def get_all(self) -> List[ModelType]:
-        """      """
+        """Get all models"""
         return self.repository.find_all()
 
     def get_first(self) -> Optional[ModelType]:
         """
-        Obtém o primeiro registro do banco de dados.
-        :param db: Sessão do banco de dados.
-        :return: Instância do primeiro registro ou None se não existir.
+        get first
         """
         return self.repository.find_first()

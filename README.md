@@ -87,7 +87,7 @@ $ docker exec -it api bash
 ```
 
 ```bash
-@container $ pytest
+@container $ pytest --capture=no -s -v
 ```
 
 ## Access container database
