@@ -46,14 +46,11 @@ class RepositoryAbstract(Generic[ModelType]):
         session.refresh(entity)
         return entity
 
-    def delete(self, entity_id: int) -> bool:
+    def delete(self, entity: ModelType) -> Optional[ModelType]:
         """Delete record"""
-        entity = self.find_by_id(entity_id)
-        if not entity:
-            return False
         session.delete(entity)
         session.commit()
-        return True
+        return entity
 
     def find_last(self) -> Optional[ModelType]:
         """Returns the last record"""

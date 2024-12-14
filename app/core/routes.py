@@ -5,6 +5,7 @@ import os
 from fastapi import APIRouter
 from app.modules import get_named_modules
 from app.main import app
+from app.core.logging import logger
 
 def include_router_from_module(target, module):
     module_attributes = vars(module)
@@ -26,7 +27,7 @@ def register_routes():
                 imported_module = importlib.import_module(import_path)
                 include_router_from_module(app, imported_module)
             except Exception as e:
-                print(f"Failed to import {module}: {e}")
+                logger.error(f"Failed to import {module}: {e}")
 
 # Register routes
 register_routes()

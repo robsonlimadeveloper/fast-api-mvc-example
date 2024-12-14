@@ -20,7 +20,7 @@ class ServiceAbstract(Generic[ModelType, DTOType]):
         """Get model by id"""
         instance = self.repository.find_by_id(id)
         if not instance:
-            raise InformationNotFound(f"Register {id} not found.")
+            raise InformationNotFound()
         return instance
 
     def register(self, dto: DTOType) -> ModelType:
@@ -33,15 +33,15 @@ class ServiceAbstract(Generic[ModelType, DTOType]):
         entity_data = dto.model_dump()
         return self.repository.update(id, entity_data)
 
-    def remove(self, id: int) -> bool:
+    def remove(self, entity: ModelType) -> Optional[ModelType]:
         """Remove model"""
-        return self.repository.delete(id)
+        return self.repository.delete(entity)
 
     def get_last(self) -> ModelType:
         """Get last model"""
         instance = self.repository.find_last()
         if not instance:
-            raise InformationNotFound("Information not found.")
+            raise InformationNotFound()
         return instance
 
     def get_all(self) -> List[ModelType]:

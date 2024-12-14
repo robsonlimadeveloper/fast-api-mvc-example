@@ -1,13 +1,42 @@
+import os
+import importlib
+from app.core.logging import logger
 from app.seeds.seed_user import seeds as user_seed
 from sqlalchemy.orm import Session
 from app.modules import get_models
 from sqlalchemy import func, text
+from app.config import (SessionLocal, engine, settings,
+                        pwd_settings, Base, get_db)
 
 class Seeds:
     """This class runs seeds"""
     def __init__(self, db: Session, modules):
         self.session: Session = db
         self.models = get_models()
+
+    def register_models(self):
+        """
+        This method register models
+        """
+        modules_path = "app/modules"
+        module_names = [
+            module
+            for module in os.listdir(modules_path)
+            if os.path.isdir(os.path.join(modules_path, module)) and
+            os.path.exists(os.path.join(modules_path, module, "model.py"))
+        ]
+
+        for module_name in module_names:
+            import_path = f"app.modules.{module_name}.model"
+            try:
+                importlib.import_module(import_path)
+            except Exception as e:
+                logger.error(f"Failed to import {import_path}: {e}")
+
+
+    def create_tables(self):
+        """This method create tables"""
+        Base.metadata.create_all(bind=engine)
 
     def synchronize_sequences(self):
         """Synchronize database sequences with the current maximum ID."""
@@ -34,7 +63,7 @@ class Seeds:
                         )
             self.session.commit()
         except Exception as error:
-            print(f"Error synchronizing sequences: {error}")
+            logger.error(f"Error synchronizing sequences: {error}")
             self.session.rollback()
             raise
 
@@ -45,28 +74,26 @@ class Seeds:
         try:
             admin_user = self.session.query(self.models["User"]).filter_by(username="admin").first()
             if admin_user:
-                print("Admin user already exists. Skipping seed.")
+                logger.info("Skipping seeds data because admin user already exists.")
                 return
         except Exception as error:
-            print(f"Error checking admin user: {error}")
+            logger.error(f"Error checking admin user: {error}")
         
         user = self.models["User"]
 
         try:
-            print("Getting Started with First Seeds...")
+            logger.info("Getting Started with First Seeds...")
             
             # Generate seed data
             users = user_seed(user)
             self.session.add_all(users)
 
-            print("Successfully inserted data from First Seed.")
+            logger.info("Successfully inserted data from First Seed.")
         except Exception as error:
             self.session.rollback()
-            print(f"Error inserting seed data: {error}")
+            logger.error(f"Error inserting seed data: {error}")
             raise
         else:
             self.session.commit()
         finally:
             self.session.close()
-
-        self.synchronize_sequences()

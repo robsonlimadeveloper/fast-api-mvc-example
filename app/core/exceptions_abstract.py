@@ -1,38 +1,23 @@
-from http import HTTPStatus
+from wsgiref import headers
+from fastapi import status
+from fastapi.exceptions import HTTPException
 
-
-class ErrorAbstract(Exception):
+class ErrorAbstract(HTTPException):
     '''Error abstract class'''
-    status_code: int = 400
-    message: str = ""
+    status_code: int = status.HTTP_400_BAD_REQUEST
+    detail: str = ""
+    headers: dict = {}
 
-    def __init__(self, message=None, status_code=None, payload=None, server_message=""):
-        super(ErrorAbstract, self).__init__()
-        self.message = message or self.message
-        self.server_message = server_message
-        self.status_code = status_code or self.status_code
-        self.payload = payload
+    def __init__(self):
+        super().__init__(
+            status_code=self.status_code,
+            detail=self.detail,
+            headers=self.headers,
+        )
 
     def to_dict(self):
         '''Change message to dict'''
-        exception = dict(self.payload or ())
-        exception['message'] = self.message
+        exception = dict(self.headers or ())
+        exception['detail'] = self.detail
 
         return exception
-
-
-class WrongParameterException(ErrorAbstract):
-    '''Wrong parameter exception class'''
-    status_code: int = HTTPStatus.BAD_REQUEST
-    message: str = "Parameter does not exist"
-
-
-class WrongValueParameterException(ErrorAbstract):
-    '''Wrong value parameter exception class'''
-    status_code: int = HTTPStatus.BAD_REQUEST
-    message: str = "Parameter value is wrong"
-
-
-class InvalidUserOrPassword(ErrorAbstract):
-    '''Invalid user or password exception class'''
-    message = "Invalid user or password"

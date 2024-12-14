@@ -39,7 +39,7 @@ def get_models() -> Dict[str, DeclarativeMeta]:
                     if isinstance(attr, DeclarativeMeta):
                         models[attr_name] = attr
             except Exception as e:
-                print(f"Erro ao carregar o módulo {module}: {e}")
+                print(f"Error importing module {module}: {e}")
 
     return models
 

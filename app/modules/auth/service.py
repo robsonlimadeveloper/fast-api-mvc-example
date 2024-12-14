@@ -3,8 +3,7 @@ from typing import Dict
 import jwt
 from sqlalchemy.orm import Session
 from app.modules.user.model import User
-from app.modules.user.service import UserService
-from .dto import AuthDTORequest, AuthDTOResponse
+from .dto import AuthDTOResponse
 from app.modules.auth.exceptions import AuthenticationException
 from app.config import settings, pwd_settings
 from http import HTTPStatus
@@ -15,13 +14,12 @@ from app.modules.auth.dto import AuthDTOResponse, TokenData
 from app.modules.auth.exceptions import AuthenticationException
 from app.modules.user.repository import UserRepository
 from app.main import oauth2_scheme
-from fastapi.security import OAuth2PasswordRequestForm
 
 class AuthService:
     """Auth service class."""
 
-    def __init__(self, user_service: UserService):
-        self.user_service = user_service
+    def __init__(self, user_repository: UserRepository):
+        self.user_repository = user_repository
     
     def hash_password(self, password: str) -> str:
         """Hash a password."""
@@ -40,43 +38,34 @@ class AuthService:
     def authenticate(self, username: str, password: str) -> AuthDTOResponse:
         """Authenticate a user and return a token."""
         
-        user: User = self.user_service.get_user_by_username(
-            username
-        )
+        user: User = self.user_repository.find_by_username(username)
         
-        if not user:
-            raise AuthenticationException("Invalid username or password")
-
-        if not pwd_settings.pwd_context.verify(password, str(user.password)):
-            raise AuthenticationException("Invalid username or password")
-
+        if not user or not pwd_settings.pwd_context.verify(password, str(user.password)):
+            raise AuthenticationException()
 
         token = self.token_encode(user)
         return AuthDTOResponse(access_token=token, token_type="Bearer")
 
     def get_current_user(self, 
-        session: Session = Depends(get_db),
         token: str = Depends(oauth2_scheme), 
     ):
-        credentials_exception = HTTPException(  
-            status_code=HTTPStatus.UNAUTHORIZED,
-            detail='Could not validate credentials',
-            headers={'WWW-Authenticate': 'Bearer'},
-        )
-
+        
         try:
             payload = decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-            username: str = payload.get('sub')
-            if not username:
-                raise credentials_exception
-            
-            token_data = TokenData(username=username)
-        except DecodeError:
-            raise credentials_exception  
-        print("here")
-        user = UserRepository().find_by_username(token_data.username)
+            username: str = payload.get('username')
 
-        if not user:
-            raise credentials_exception  
+            if not username:
+                raise AuthenticationException()
+
+            token_data = TokenData(username=username)
+            user = self.user_repository.find_by_username(token_data.username)
+            
+            if not user:
+                raise AuthenticationException()
+
+        # except DecodeError:
+        #     raise AuthenticationException()
+        except Exception as e:
+            raise AuthenticationException()
 
         return user
