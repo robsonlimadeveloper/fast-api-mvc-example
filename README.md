@@ -12,12 +12,24 @@
 <img src="https://badgen.net/badge/database/postgresql/blue?icon=">
 <img src="https://badgen.net/badge/tests/pytest/blue?icon=">
 </p>
+<p align="center">
+<a href='https://ko-fi.com/V7V717GRV1' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi2.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+</p>
 
 <p align="justify">
 Simple example of <strong>FastAPI</strong> using <strong>MVC</strong> and microservices elements architecture, the application contained here develops some
 functionalities for accessing the database and creating models and tests.
 Below are the steps required to run the database and the application backend
 locally.
+</p>
+
+<p><strong>Develop with:</strong></p>
+
+<p align="left">
+	
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=python,fastapi,postgres,git,docker,vscode" />
+  </a>
 </p>
 
 
