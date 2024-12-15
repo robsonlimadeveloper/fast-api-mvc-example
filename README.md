@@ -37,28 +37,32 @@ The proposed structure is described as follows:
 
 ```
 /app
-	__init__.py
-	/modules
-		__init__.py
-		/module_1/
-			__init__.py
-			dto.py
-			model.py
-			repository.py
-			service.py
-			view.py
-		/module_2/
-			dto.py
-			model.py
-			repository.py
-			service.py
-			view.py
-		/config
-			__init__.py
-		/seeds
-			seed_module_1.py
-			seed_module_2.py
-			seeder.py
+    __init__.py
+    main.py
+    /modules
+            __init__.py
+            /module_1/
+                     __init__.py
+                     exceptions.py
+		     dto.py
+		     model.py
+		     repository.py
+		     service.py
+		     views.py
+	    /module_2/
+                     __init__.py
+                     exceptions.py
+		     dto.py
+		     model.py
+		     repository.py
+		     service.py
+		     views.py
+	      /config
+		     __init__.py
+	      /seeds
+		    seed_module_1.py
+		    seed_module_2.py
+		    seeder.py
 /tests
 .env
 .gitignore
