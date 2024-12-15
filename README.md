@@ -1,7 +1,7 @@
 
 <h1 align="center">
   <br>
-   API MVC example
+   FastAPI MVC Example
   <br>
 </h1>
 
@@ -17,8 +17,7 @@
 </p>
 
 <p align="justify">
-Simple example of <strong>FastAPI</strong> using <strong>MVC</strong> and microservices elements architecture, the application contained here develops some
-functionalities for accessing the database and creating models and tests.
+A simple and scalable FastAPI project following the MVC (Model-View-Controller) pattern with elements of a microservices architecture. This application demonstrates core functionalities such as database access, model creation, and automated testing.
 Below are the steps required to run the database and the application backend
 locally.
 </p>
@@ -31,8 +30,20 @@ locally.
     <img src="https://skillicons.dev/icons?i=python,fastapi,postgres,git,docker,vscode" />
   </a>
 </p>
+<p align="left">
+<strong>Existing Features:</strong> 🚀 
 
+✅ Clean Architecture: Well-organized file structure for easy maintenance and scalability.
 
+✅ Ready-to-Use Configuration: Pre-configured for both development and production environments.
+
+✅ SQLAlchemy Database Management: Robust model handling and database operations.
+
+✅ Well-Defined RESTful APIs: Ready-to-use CRUD and authentication endpoints.
+
+✅ Integrated Documentation: Swagger and Redoc for easy API exploration.
+
+</p>
 The proposed structure is described as follows:
 
 ```
@@ -71,6 +82,10 @@ Dockerfile
 README.md
 requirements.txt
 ```
+
+## Getting Started:
+
+Follow the steps below to set up and run the database and backend application locally.
 
 ## Prerequisites
 
