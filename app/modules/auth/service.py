@@ -35,7 +35,7 @@ class AuthService:
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
         return token
 
-    def authenticate(self, username: str, password: str) -> AuthDTOResponse:
+    def authenticate(self, username: str, password: str) -> dict:
         """Authenticate a user and return a token."""
         
         user: User = self.user_repository.find_by_username(username)
@@ -44,7 +44,7 @@ class AuthService:
             raise AuthenticationException()
 
         token = self.token_encode(user)
-        return AuthDTOResponse(access_token=token, token_type="Bearer")
+        return {"access_token": token, "token_type": "Bearer"}
 
     def get_current_user(self, 
         token: str = Depends(oauth2_scheme), 

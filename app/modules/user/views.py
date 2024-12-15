@@ -15,12 +15,12 @@ router = APIRouter(prefix="/users", tags=["Users"])
 @router.post(
         path="/register",
         response_model=UserResponseDTO,
-        status_code=status.HTTP_201_CREATED,
+        status_code=status.HTTP_200_OK,
         description="Register a new user.",
         tags=["Users"])
 def register(user_dto: UserCreateDTO, token: str = Depends(oauth2_scheme)):
     """Register user."""
-    return user_service.register(user_dto.model_dump())
+    return UserResponseDTO.model_validate(user_service.register(user_dto.model_dump()).__dict__)
 
 @router.get(path="/{user_id}",
             response_model=UserResponseDTO,
@@ -29,7 +29,7 @@ def register(user_dto: UserCreateDTO, token: str = Depends(oauth2_scheme)):
             tags=["Users"])
 async def get_user_by_id(user_id: int, token: str = Depends(oauth2_scheme)):
     """Get user by id."""
-    return user_service.get_by_id(user_id)
+    return UserResponseDTO.model_validate(user_service.get_by_id(user_id).__dict__)
     
 @router.get(path="/users/",
             response_model=Page[UserResponseDTO],
@@ -49,7 +49,7 @@ def get_users():
 async def update_user(user_id: int, user_dto: UserUpdateDTO, token: str = Depends(oauth2_scheme)):
     """Update user by id."""
     user = user_service.get_by_id(user_id)
-    return user_service.update(user_id, user_dto.model_dump())
+    return UserResponseDTO.model_validate(user_service.update(user_id, user_dto.model_dump()).__dict__)
 
 @router.delete(
         path="/{user_id}",
@@ -59,4 +59,4 @@ async def update_user(user_id: int, user_dto: UserUpdateDTO, token: str = Depend
         tags=["Users"])
 async def delete_user(user_id: int, token: str = Depends(oauth2_scheme)):
     """Delete user by id."""
-    return user_service.delete(user_id, token)
+    return UserResponseDTO.model_validate(user_service.delete(user_id, token).__dict__)

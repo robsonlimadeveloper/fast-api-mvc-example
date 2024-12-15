@@ -21,6 +21,6 @@ async def token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> AuthDTOResponse: 
     """Authenticate a user and return a token."""
-    return auth_service.authenticate(form_data.username, form_data.password)
+    return AuthDTOResponse.model_validate(auth_service.authenticate(form_data.username, form_data.password))
     
     

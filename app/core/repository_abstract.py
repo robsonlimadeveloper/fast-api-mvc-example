@@ -1,7 +1,8 @@
 from typing import List, Type, TypeVar, Generic, Optional
+from sqlalchemy.exc import SQLAlchemyError
+from app.config import get_db
 
-from app.config import session
-from app.config import session
+session = get_db()
 
 ModelType = TypeVar("ModelType")
 
@@ -35,18 +36,26 @@ class RepositoryAbstract(Generic[ModelType]):
         session.refresh(entity)
         return entity
 
-    def update(self, entity_id: int, entity_data: dict) -> Optional[ModelType]:
+    def update(self, entity_id: int, entity_data: dict) -> ModelType:
         """Update record"""
         entity = self.find_by_id(entity_id)
         if not entity:
             return None
-        for key, value in entity_data.items():
-            setattr(entity, key, value)
-        session.commit()
-        session.refresh(entity)
-        return entity
 
-    def delete(self, entity: ModelType) -> Optional[ModelType]:
+        try:
+            for key, value in entity_data.items():
+                if key != "id" and hasattr(entity, key):
+                    setattr(entity, key, value)
+
+            session.commit()
+            session.refresh(entity)
+            return entity
+
+        except SQLAlchemyError as e:
+            session.rollback()
+            raise e
+
+    def delete(self, entity: ModelType) -> ModelType:
         """Delete record"""
         session.delete(entity)
         session.commit()

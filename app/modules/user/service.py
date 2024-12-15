@@ -21,7 +21,7 @@ class UserService(ServiceAbstract):
 
         return user
 
-    def get_by_id(self, id: int) -> UserResponseDTO:
+    def get_by_id(self, id: int) -> User:
         """Get user by id.
 
         Args:
@@ -67,7 +67,7 @@ class UserService(ServiceAbstract):
 
         return user
 
-    def register(self, dto: dict) -> Optional[UserResponseDTO]:
+    def register(self, dto: dict) -> User:
         """Register user.
 
         Args:
@@ -80,14 +80,14 @@ class UserService(ServiceAbstract):
             Optional[UserResponseDTO]: Registered user.
         """
 
-        if self.get_user_by_username(dto["username"]):
+        if self.repository.find_by_username(dto["username"]):
             raise NameDuplicateException()
 
         dto["password"] = pwd_settings.pwd_context.hash(dto["password"])
 
         return self.repository.save(User(**dto))
 
-    def update(self, id: int, dto: dict) -> Optional[UserResponseDTO]:
+    def update(self, id: int, dto: dict) -> User:
         """Update user.
 
         Args:
@@ -103,17 +103,17 @@ class UserService(ServiceAbstract):
         user = self.__verify_user_exists(id)
 
         dto["password"] = pwd_settings.pwd_context.hash(dto["password"])
-
-        return self.repository.update(id, User(**dto))
+        user = self.repository.update(id, dto)
+        return user
 
     def __verify_id_user_logged(self, id: int, token: str):
         auth_service = AuthService(self.repository)
         current_user: User = auth_service.get_current_user(token=token)
         
-        if current_user.id == id:
+        if current_user.__dict__["id"] == id:
             raise UserNotDeleteYourselfException()
 
-    def delete(self, id: int, token: str) -> Optional[UserResponseDTO]:
+    def delete(self, id: int, token: str) -> User:
         """Delete user by id.
 
         Args:

@@ -16,5 +16,3 @@ class UserUpdateDTO(BaseModel):
     username: Optional[str]
     password: Optional[str]
 
-    class ConfigDict:
-        from_attributes = True

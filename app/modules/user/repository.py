@@ -7,10 +7,10 @@ from .model import User
 
 class UserRepository(RepositoryAbstract):
     """Class to manage user data."""
-    session = session
-
+    
     def __init__(self):
         super(UserRepository, self).__init__(User)
+        self.session = session
 
     def find_by_username(self, username: str) -> User:
         """Return User by username."""
