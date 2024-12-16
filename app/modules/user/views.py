@@ -10,15 +10,15 @@ from fastapi_pagination import Page, paginate, add_pagination
 from fastapi import status
 
 user_service = UserService(UserRepository())
-router = APIRouter(prefix="/users", tags=["Users"])
+router = APIRouter(prefix="/api/users", tags=["Users"])
 
 @router.post(
-        path="/register",
+        path="/",
         response_model=UserResponseDTO,
         status_code=status.HTTP_200_OK,
         description="Register a new user.",
         tags=["Users"])
-def register(user_dto: UserCreateDTO, token: str = Depends(oauth2_scheme)):
+def add_user(user_dto: UserCreateDTO, token: str = Depends(oauth2_scheme)):
     """Register user."""
     return UserResponseDTO.model_validate(user_service.register(user_dto.model_dump()).__dict__)
 
@@ -31,12 +31,12 @@ async def get_user_by_id(user_id: int, token: str = Depends(oauth2_scheme)):
     """Get user by id."""
     return UserResponseDTO.model_validate(user_service.get_by_id(user_id).__dict__)
     
-@router.get(path="/users/",
+@router.get(path="/",
             response_model=Page[UserResponseDTO],
             status_code=status.HTTP_200_OK,
             description="Get all users with pagination.",
             tags=["Users"])
-def get_users():
+def get_all_users():
     """Get all users."""
     users = user_service.get_all()
     return paginate(users)
@@ -46,7 +46,7 @@ def get_users():
             status_code=status.HTTP_200_OK,
             description="Update user by id.",
             tags=["Users"])
-async def update_user(user_id: int, user_dto: UserUpdateDTO, token: str = Depends(oauth2_scheme)):
+async def update_user_by_id(user_id: int, user_dto: UserUpdateDTO, token: str = Depends(oauth2_scheme)):
     """Update user by id."""
     user = user_service.get_by_id(user_id)
     return UserResponseDTO.model_validate(user_service.update(user_id, user_dto.model_dump()).__dict__)
@@ -57,6 +57,6 @@ async def update_user(user_id: int, user_dto: UserUpdateDTO, token: str = Depend
         status_code=status.HTTP_200_OK,
         description="Delete user by id.",
         tags=["Users"])
-async def delete_user(user_id: int, token: str = Depends(oauth2_scheme)):
+async def delete_user_by_id(user_id: int, token: str = Depends(oauth2_scheme)):
     """Delete user by id."""
     return UserResponseDTO.model_validate(user_service.delete(user_id, token).__dict__)

@@ -7,7 +7,7 @@ from app.modules.user.repository import UserRepository
 from fastapi.security import OAuth2PasswordRequestForm
 from typing_extensions import Annotated
 
-router = APIRouter(prefix="/auth", tags=["Auth"])
+router = APIRouter(prefix="/api/auth", tags=["Auth"])
 
 auth_service = AuthService(UserRepository())
 
@@ -17,10 +17,8 @@ auth_service = AuthService(UserRepository())
         status_code=status.HTTP_200_OK,
         description="Authenticate a user and return a token.",
         tags=["Auth"])
-async def token(
+async def create_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
 ) -> AuthDTOResponse: 
     """Authenticate a user and return a token."""
     return AuthDTOResponse.model_validate(auth_service.authenticate(form_data.username, form_data.password))
-    
-    
