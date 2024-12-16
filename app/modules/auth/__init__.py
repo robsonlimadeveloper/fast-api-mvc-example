@@ -1,2 +1,2 @@
 """Auth module."""
-from .model import Token
+# from .model import Auth

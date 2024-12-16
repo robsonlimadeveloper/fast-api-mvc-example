@@ -46,7 +46,7 @@ app = FastAPI(
     openapi_url="/openapi.json",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
-    debug=False
+    debug=True
 )
 
 app.add_middleware(
@@ -68,7 +68,7 @@ app.add_middleware(
 #     return response
 
 app.openapi_schema = None
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/token')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/auth/token')
 
 # Register routes
 from app.core import routes, handler_error
