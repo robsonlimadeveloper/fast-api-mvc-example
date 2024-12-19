@@ -1,9 +1,9 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 
 class UserCreateDTO(BaseModel):
-    username: str
-    password: str
+    username: str = Field(min_length=5, max_length=50)
+    password: str = Field(min_length=6, max_length=10)
 
 class UserResponseDTO(BaseModel):
     id: int
@@ -13,6 +13,6 @@ class UserResponseDTO(BaseModel):
         from_attributes = True
 
 class UserUpdateDTO(BaseModel):
-    username: Optional[str]
+    username: str = Field(min_length=5, max_length=50)
     password: Optional[str]
 

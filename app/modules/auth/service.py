@@ -29,7 +29,7 @@ class AuthService:
         """Generate a JWT token for a user."""
         payload = {
             "sub": user.id,
-            "username": user.username,
+            "user_id": user.id,
             "exp": datetime.utcnow() + timedelta(days=1),
         }
         token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
