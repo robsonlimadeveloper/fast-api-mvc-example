@@ -52,13 +52,13 @@ class AuthService:
         
         try:
             payload = decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-            username: str = payload.get('username')
+            user_id: str = payload.get('user_id')
 
-            if not username:
+            if not user_id:
                 raise AuthenticationException()
 
-            token_data = TokenData(username=username)
-            user = self.user_repository.find_by_username(token_data.username)
+            token_data = TokenData(user_id=int(user_id))
+            user = self.user_repository.find_by_id(token_data.user_id)
             
             if not user:
                 raise AuthenticationException()

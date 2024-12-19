@@ -17,4 +17,4 @@ class AuthUserDTO(BaseModel):
     password: str = Field(..., description="User's password")
 
 class TokenData(BaseModel):
-    username: str = Field(..., description="Username")
+    user_id: int = Field(..., description="User ID")
