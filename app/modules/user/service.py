@@ -123,7 +123,7 @@ class UserService(ServiceAbstract):
             bool: True if deleted, False otherwise.
         """
 
-        self.__verify_id_user_logged(id, token)
+        # self.__verify_id_user_logged(id, token)
 
         user: User = self.__verify_user_exists(id)
 

@@ -1,13 +1,12 @@
 """Auth views."""
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from app.modules.auth.service import AuthService
 from app.modules.auth.dto import AuthDTOResponse
-from app.modules.auth.exceptions import AuthenticationException
 from app.modules.user.repository import UserRepository
 from fastapi.security import OAuth2PasswordRequestForm
 from typing_extensions import Annotated
 
-router = APIRouter(prefix="/api/auth", tags=["Auth"])
+router = APIRouter(prefix="/v1/api/auth", tags=["Auth"])
 
 auth_service = AuthService(UserRepository())
 

@@ -104,11 +104,11 @@ $ docker-compose up --build -d
 
 ## API Documentation
 ```
-http://localhost:4010/api/docs/
+http://localhost:4010/v1/api/docs/
 ```
 
 ```
-http://localhost:4010/api/redoc/
+http://localhost:4010/v1/api/redoc/
 ```
 
 ## Run tests (pytest)
