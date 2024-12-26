@@ -5,6 +5,7 @@ import jwt
 from app.modules.auth.service import AuthService
 from app.modules.user.repository import UserRepository
 from fastapi import status
+from app.core.logging import logger
 
 class JWTMiddleware(BaseHTTPMiddleware):
 
@@ -26,9 +27,11 @@ class JWTMiddleware(BaseHTTPMiddleware):
         try:
             auth_service = AuthService(UserRepository())
             auth_service.get_current_user(token=token)
-        except jwt.ExpiredSignatureError:
+        except jwt.ExpiredSignatureError as e:
+            logger.error(f"Expired token: {e}")
             return JSONResponse({"detail": "Expired token"}, status_code=status.HTTP_401_UNAUTHORIZED)
-        except jwt.InvalidTokenError:
+        except jwt.InvalidTokenError as e:
+            logger.error(f"Invalid token: {e}")
             return JSONResponse({"detail": "Invalid token"}, status_code=status.HTTP_401_UNAUTHORIZED)
 
         return await call_next(request)
