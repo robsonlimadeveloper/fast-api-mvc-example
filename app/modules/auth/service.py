@@ -13,7 +13,7 @@ from jwt import DecodeError, decode, encode
 from app.modules.auth.dto import AuthDTOResponse, TokenData
 from app.modules.auth.exceptions import AuthenticationException
 from app.modules.user.repository import UserRepository
-from app.main import oauth2_scheme
+
 
 class AuthService:
     """Auth service class."""
@@ -47,7 +47,7 @@ class AuthService:
         return {"access_token": token, "token_type": "Bearer"}
 
     def get_current_user(self, 
-        token: str = Depends(oauth2_scheme), 
+        token: str 
     ):
         
         try:
@@ -63,8 +63,8 @@ class AuthService:
             if not user:
                 raise AuthenticationException()
 
-        # except DecodeError:
-        #     raise AuthenticationException()
+        except DecodeError:
+            raise AuthenticationException()
         except Exception as e:
             raise AuthenticationException()
 

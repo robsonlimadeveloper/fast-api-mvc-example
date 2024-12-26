@@ -9,7 +9,7 @@ class UserResponseDTO(BaseModel):
     id: int
     username: str
 
-    class ConfigDict:
+    class Config:
         from_attributes = True
 
 class UserUpdateDTO(BaseModel):

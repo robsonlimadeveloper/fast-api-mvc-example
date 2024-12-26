@@ -3,7 +3,6 @@ import importlib
 import sys
 import os
 from fastapi import APIRouter
-from app.modules import get_named_modules
 from app.main import app
 from app.core.logging import logger
 
@@ -33,7 +32,7 @@ def register_routes():
 register_routes()
 
 # Routes base
-@app.get("/api", tags=["API Index"])
+@app.get("/api/v1", tags=["API Index"])
 def api_index():
     """API index base."""
     routes = []
