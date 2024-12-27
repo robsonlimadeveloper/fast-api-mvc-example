@@ -2,13 +2,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from passlib.context import CryptContext
-
+from os import getenv
 # Load environment variables
 class Settings(BaseSettings):
     DATABASE_URL: str = ""
     SECRET_KEY: str = "supersecretkey"
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+    GOOGLE_CLIENT_ID: str = getenv("GOOGLE_CLIENT_ID", "your-client-id")
+    GOOGLE_CLIENT_SECRET: str = getenv("GOOGLE_CLIENT_SECRET", "your-client-secret")
+    GOOGLE_REDIRECT_URI: str = getenv("GOOGLE_REDIRECT_URI", "http://127.0.0.1:8000/auth/google/callback")
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
