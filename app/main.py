@@ -13,6 +13,7 @@ from app import modules
 from app.seeds.seeder import Seeds
 from app.core.logging import logger
 from app.middleware.middleware import JWTMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.security import OAuth2PasswordBearer
 from app.core.utils import AsyncIterator
 
@@ -47,6 +48,7 @@ app = FastAPI(
     redoc_url="/v1/api/redoc",
     debug=True
 )
+
 
 app.add_middleware(JWTMiddleware)
 
@@ -87,3 +89,10 @@ disable_installed_extensions_check()
 add_pagination(app)
 
 logger.info('API is running')
+
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SECRET_KEY,
+    # session_cookie="my_session",
+    # max_age=3600,  # Expira após 1 hora
+)

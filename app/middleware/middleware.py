@@ -15,7 +15,14 @@ class JWTMiddleware(BaseHTTPMiddleware):
             return Response(status_code=200)
 
         # allow public routes
-        if request.url.path in ["/v1/api/auth/token", "/v1/public", "/v1/api/docs", "/v1/api/redoc", "/v1/openapi.json"]:
+        if request.url.path in ["/v1/api/auth/token",
+                                "/v1/public",
+                                "/v1/api/docs",
+                                "/v1/api/redoc",
+                                "/v1/openapi.json",
+                                "/v1/api/auth/google/login",
+                                "/v1/api/auth/google/callback",
+                                "/favicon.ico",]:
             return await call_next(request)
 
         #Verify token
@@ -26,7 +33,7 @@ class JWTMiddleware(BaseHTTPMiddleware):
         token = auth_header.split(" ")[1]
         try:
             auth_service = AuthService(UserRepository())
-            auth_service.get_current_user(token=token)
+            auth_service.get_current_user_by_token(token=token)
         except jwt.ExpiredSignatureError as e:
             logger.error(f"Expired token: {e}")
             return JSONResponse({"detail": "Expired token"}, status_code=status.HTTP_401_UNAUTHORIZED)

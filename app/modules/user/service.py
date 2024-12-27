@@ -5,7 +5,7 @@ from app.modules.user.model import User
 from app.modules.user.repository import UserRepository
 from app.modules.user.dto import UserResponseDTO
 from app.modules.auth.service import AuthService
-from typing import List, Optional
+from typing import List
 from app.config import pwd_settings
 
 class UserService(ServiceAbstract):
@@ -108,7 +108,7 @@ class UserService(ServiceAbstract):
 
     def __verify_id_user_logged(self, id: int, token: str):
         auth_service = AuthService(self.repository)
-        current_user: User = auth_service.get_current_user(token=token)
+        current_user: User = auth_service.get_current_user_by_token(token=token)
         
         if current_user.__dict__["id"] == id:
             raise UserNotDeleteYourselfException()
